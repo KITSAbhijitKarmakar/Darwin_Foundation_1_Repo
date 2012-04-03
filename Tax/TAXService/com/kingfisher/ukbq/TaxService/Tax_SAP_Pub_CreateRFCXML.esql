@@ -1,0 +1,80 @@
+BROKER SCHEMA com.kingfisher.ukbq.TaxService
+/****************************************************************************************
+* COPYRIGHT. <TATA CONSULTANCY SERVICES 2012> ALL RIGHTS RESERVED. NO PART OF THIS   	*
+* SOURCE CODE MAY BE REPRODUCED, STORED IN A RETRIEVAL SYSTEM, OR TRANSMITTED,IN ANY	*
+* FORM BY ANY MEANS, ELECTRONIC, MECHANICAL, PHOTOCOPYING, RECORDING OR OTHERWISE,		*
+* WITHOUT THE PRIOR WRITTEN PERMISSION OF <TATA CONSULTANCY SERVICES>.                  *                           		*
+****************************************************************************************/
+
+/****************************************************************************************	
+* Node Name:		CreateRFCXML		     		 									*
+* Module Name:		com.kingfisher.ukbq.TaxService.Tax_SAP_Pub_CreateRFCXML            		 						*
+* Description:		This module create XML message along with the required namespace
+					to perform RFC in SAP.   											*                                         
+																						
+* Version      Date	   		   Author				Description                     	*
+* ======= 	=========== 	=========== 	========================================	*
+*  1.00  	26-Mar-2012   	Prabha Shaw	    The initial version.                		*
+****************************************************************************************/
+
+
+DECLARE ns NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget';
+
+CREATE COMPUTE MODULE Tax_SAP_Pub_CreateRFCXML
+	/************************************************************************************
+	* Function Name:	      Main                              						*
+	* Input Parameters:	      None                             							*
+	* Output Parameters:      Boolean Return                    						*
+	* Description:            The Main entrypoint to the module 						*  
+ 
+	* Version      Date	   		   Author				Description                     *
+	* ======= 	=========== 	=========== 	================================		*
+	*  1.00  	26-Mar-2012   	Prabha Shaw	    The initial version.         		*
+	************************************************************************************/
+	
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		 CALL CopyMessageHeaders();
+		
+			SET OutputLocalEnvironment = InputLocalEnvironment;
+				
+            -- Default Namespace declaration
+			DECLARE sapzretrfcvattabget NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget';
+            DECLARE sapasi NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata';
+            DECLARE sapreturn619647890 NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapreturn619647890';
+            DECLARE sapttaxtab994896004 NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapttaxtab994896004';
+            DECLARE xsi NAMESPACE 'http://www.w3.org/2001/XMLSchema-instance';
+            DECLARE schemaLocation NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget C:\Darwin\com\ibm\www\xmlns\prod\websphere\j2ca\sap\sapzretrfcvattabget\SapZRetRfcVattabget.xsd';
+			
+            SET OutputRoot.XMLNSC.(XMLNSC.XmlDeclaration)*.(XMLNSC.Attribute)encoding = 'UTF-8';
+            SET OutputRoot.XMLNSC.(XMLNSC.XmlDeclaration)*.(XMLNSC.Attribute)version = '1.0';
+            SET OutputRoot.XMLNSC.SapZRetRfcVattabget.(XML.NamespaceDecl)xmlns:sapzretrfcvattabget = 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget';  
+		    SET OutputRoot.XMLNSC.SapZRetRfcVattabget.(XML.NamespaceDecl)xmlns:sapasi = 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata';  
+            SET OutputRoot.XMLNSC.SapZRetRfcVattabget.(XML.NamespaceDecl)xmlns:sapreturn619647890 = 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapreturn619647890';  
+            SET OutputRoot.XMLNSC.SapZRetRfcVattabget.(XML.NamespaceDecl)xmlns:sapttaxtab99489600 = 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapttaxtab994896004'; 
+            SET OutputRoot.XMLNSC.SapZRetRfcVattabget.(XML.NamespaceDecl)xmlns:xsi = 'http://www.w3.org/2001/XMLSchema-instance'; 
+            SET OutputRoot.XMLNSC.SapZRetRfcVattabget.(XML.NamespaceDecl)xmlns:schemaLocation = 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget';
+   
+   		-- Set params to Call RFC
+            SET OutputRoot.XMLNSC.sapzretrfcvattabget:SapZRetRfcVattabget.I_DATE_VALID = CURRENT_DATE;
+            SET OutputRoot.XMLNSC.sapzretrfcvattabget:SapZRetRfcVattabget.I_VALID_ONLY = 'X';
+		
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
+
+

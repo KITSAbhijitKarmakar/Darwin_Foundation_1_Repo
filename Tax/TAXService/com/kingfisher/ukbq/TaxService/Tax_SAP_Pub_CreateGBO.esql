@@ -1,0 +1,156 @@
+BROKER SCHEMA com.kingfisher.ukbq.TaxService
+/****************************************************************************************
+* COPYRIGHT. <TATA CONSULTANCY SERVICES 2012> ALL RIGHTS RESERVED. NO PART OF THIS   	*
+* SOURCE CODE MAY BE REPRODUCED, STORED IN A RETRIEVAL SYSTEM, OR TRANSMITTED,IN ANY	*
+* FORM BY ANY MEANS, ELECTRONIC, MECHANICAL, PHOTOCOPYING, RECORDING OR OTHERWISE,		*
+* WITHOUT THE PRIOR WRITTEN PERMISSION OF <TATA CONSULTANCY SERVICES>.                  **
+****************************************************************************************/
+
+/****************************************************************************************	
+* Node Name:		CreateGBO		     		 										*
+* Module Name:		com.kingfisher.ukbq.TaxService.Tax_SAP_Pub_CreateGBO             	*
+* Description:		This module translate the data recieved through RFC into 
+					VAT canonical. 														*  					                                         
+																						
+* Version      Date	   		   Author				Description                     	*
+* ======= 	=========== 	=========== 	========================================	*
+*  1.00  	26-Mar-2012   	Prabha Shaw	    	The initial version.                	*
+****************************************************************************************/
+ 
+DECLARE sapzretrfcvattabget NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget';
+DECLARE sapzretrfcvatsitetabget NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvatsitetabget';
+
+CREATE COMPUTE MODULE Tax_SAP_Pub_CreateGBO
+/************************************************************************************
+	* Function Name:	      Main                              						*
+	* Input Parameters:	      None                             							*
+	* Output Parameters:      Boolean Return                    						*
+	* Description:            The Main entrypoint to the module 						*  
+ 
+	* Version      Date	   		   Author				Description                     *
+	* ======= 	=========== 	=========== 	================================		*
+	*  1.00  	26-Mar-2012   	Prabha Shaw	    	The initial version.        		*
+	************************************************************************************/	
+	
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL CopyMessageHeaders();
+		
+	--Set Command to Publish TAX Canonical message on Topic '/MASTERDATA/TAX/DETAILS'.
+		SET OutputRoot.Properties=InputRoot.Properties;
+		SET OutputRoot.MQMD=InputRoot.MQMD;
+		SET OutputRoot.MQRFH2=InputRoot.MQRFH2;
+		SET OutputRoot.XMLNSC = InputRoot.XMLNSC;
+		SET OutputRoot.MQRFH2.psc.Topic = '/MASTERDATA/TAX/DETAILS';
+		SET OutputRoot.MQRFH2.psc.Command='Publish';
+		
+	--Declare CounterVariables and Namespaces.
+	DECLARE taxCount INTEGER;
+	DECLARE defNS NAMESPACE 'http://www.kingfisher.com/oagis/9';
+	DECLARE oa NAMESPACE 'http://www.openapplications.org/oagis/9';
+	DECLARE xsi NAMESPACE 'http://www.openapplications.org/oagis/9';
+	DECLARE "SOAP-ENV" NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+	DECLARE "SOAP-ENC" NAMESPACE 'http://schemas.xmlsoap.org/soap/encoding/';
+	DECLARE xsd NAMESPACE 'http://www.w3.org/2001/XMLSchema';
+	DECLARE m0 NAMESPACE 'http://www.openapplications.org/oagis/9';
+	
+	CREATE FIELD OutputRoot.XMLNSC."SOAP-ENV":Envelope;
+	
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope.(XMLNSC.NamespaceDecl)xmlns:"SOAP-ENV" = "SOAP-ENV";
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope.(XMLNSC.NamespaceDecl)xmlns:"SOAP-ENC" = "SOAP-ENC";
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope.(XMLNSC.NamespaceDecl)xmlns:xsi = xsi;
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope.(XMLNSC.NamespaceDecl)xmlns:xsd = xsd;
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope.(XMLNSC.NamespaceDecl)xmlns:m0 = m0;
+	
+	CREATE FIELD OutputRoot.XMLNSC."SOAP-ENV":Envelope."SOAP-ENV":Body;
+	
+	--Set Attribute and namespace to parent element 'SynchroniseTax'.
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope."SOAP-ENV":Body.defNS:SynchroniseTax.(XMLNSC.Attribute)releaseID		= '1.0';
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope."SOAP-ENV":Body.defNS:SynchroniseTax.(XMLNSC.Attribute)languageCode	= 'en';
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope."SOAP-ENV":Body.defNS:SynchroniseTax.(XMLNSC.NamespaceDecl)xmlns 		= defNS;
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope."SOAP-ENV":Body.defNS:SynchroniseTax.(XMLNSC.NamespaceDecl)xmlns:xsi 	= xsi;
+	SET OutputRoot.XMLNSC."SOAP-ENV":Envelope."SOAP-ENV":Body.defNS:SynchroniseTax.(XMLNSC.NamespaceDecl)xmlns:oa 	= oa;
+	
+	--Declare field refrence and set Counter.
+	DECLARE refSapTTaxtab REFERENCE TO Environment.sapzretrfcvatsitetabget:SapZRetRfcVatsitetabget.DataObject.sapzretrfcvatsitetabget:SapZRetRfcVatsitetabget.SapTTaxtab;
+	DECLARE refSapTTaxtab994896004 REFERENCE TO InputRoot.DataObject.sapzretrfcvattabget:SapZRetRfcVattabget.SapTTaxtab994896004;
+	DECLARE refTargetCursor REFERENCE TO OutputRoot.XMLNSC."SOAP-ENV":Envelope."SOAP-ENV":Body.defNS:SynchroniseTax;
+	
+	SET taxCount = 1;
+		
+	--Set CreationDateTime and Common attribute Name ='BODID' as MQMD MsgID. 
+
+	SET refTargetCursor.oa:ApplicationArea.oa:CreationDateTime = CURRENT_GMTTIMESTAMP;
+	SET refTargetCursor.oa:ApplicationArea.oa:BODID = InputRoot.MQMD.MsgId;
+	
+	--Set vlaue for element and attribute of 'ActionCriteria';
+	
+	SET refTargetCursor.defNS:DataArea.defNS:Synchronise.oa:ActionCriteria.oa:ActionExpression.(XMLNSC.Attribute)expressionLanguage ='xpath';
+	SET refTargetCursor.defNS:DataArea.defNS:Synchronise.oa:ActionCriteria.oa:ActionExpression.(XMLNSC.Attribute)actionCode ='Modified';
+	SET refTargetCursor.defNS:DataArea.defNS:Synchronise.oa:ActionCriteria.oa:ActionExpression ='/SynchroniseTax/DataArea/Tax';
+		
+	--	 For every occurrence of 'SapTTaxtab' create the corresponding 'Tax' element of canonical. 
+	WHILE LASTMOVE(refSapTTaxtab) DO
+		
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:Type 															= 'VAT';
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[1]								= refSapTTaxtab.Country;
+    		SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[1].(XMLNSC.Attribute)listName	= 'COUNTRY';
+    		SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[2] 							 	= refSapTTaxtab.Site;
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[2].(XMLNSC.Attribute)listName	= 'REGION';
+  	
+  	/*Value for the attribute 'Name' is hard corded.
+  	 If SAP Site value = P003 then set corresponding canonical value = GUERNSEY
+	 If SAP Site value = P005 then set corresponding canonical value = JERSEY*/
+  
+  	IF refSapTTaxtab.Site = 'P003' THEN
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[2].(XMLNSC.Attribute)name		= 'GUERNSEY';
+   	ELSE IF refSapTTaxtab.Site = 'P005' THEN	
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[2].(XMLNSC.Attribute)name		= 'JERSEY';
+  	END IF; 
+  	END IF; 		
+  	   		SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].defNS:ProductTaxClassificationCode 								= refSapTTaxtab.Code;
+    		SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:EffectiveTimePeriod.oa:StartDateTime  						= refSapTTaxtab.DateFrom;
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:EffectiveTimePeriod.oa:EndDateTime 							= refSapTTaxtab.DateTo;
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:Calculation.oa:RateNumeric									= refSapTTaxtab.Rate;
+      		SET taxCount = taxCount+1;
+      		MOVE refSapTTaxtab NEXTSIBLING REPEAT TYPE NAME;
+			
+	END WHILE;
+	
+		--	 For every occurrence of 'SapTTaxtab994896004' create the corresponding 'Tax' element of canonical. 
+	WHILE LASTMOVE(refSapTTaxtab994896004) DO
+				
+			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:Type = 'VAT';
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[1] 								= refSapTTaxtab994896004.Country;
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[1].(XMLNSC.Attribute)listName	= 'COUNTRY';
+  	 	 	SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[2].(XMLNSC.Attribute)listName	= 'REGION'; 
+  		
+  		--Value for the attribute 'Name' is hard corded as ‘MAIN’.
+  		  	SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:TaxJurisdicationCodes.oa:Code[2].(XMLNSC.Attribute)name		= 'MAIN';		
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].defNS:ProductTaxClassificationCode 								= refSapTTaxtab994896004.Code;
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:EffectiveTimePeriod.oa:StartDateTime 							= refSapTTaxtab994896004.DateFrom;
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:EffectiveTimePeriod.oa:EndDateTime 							= refSapTTaxtab994896004.DateTo;
+  			SET refTargetCursor.defNS:DataArea.defNS:Tax[taxCount].oa:RateNumeric 													= refSapTTaxtab994896004.Rate;
+      		SET taxCount = taxCount+1;
+      		MOVE refSapTTaxtab994896004 NEXTSIBLING REPEAT TYPE NAME;
+		
+	END WHILE;
+	
+	
+	RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
