@@ -18,7 +18,7 @@
         <shortDescription xmi:type="utility:ConstantString" string="RFC XML Creation"/>
         <longDescription xmi:type="utility:ConstantString" string="Creates XML reqired  to invoke the other RFC."/>
       </nodes>
-      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="389,208" computeExpression="esql://routine/com.kingfisher.ukbq.TaxService#Tax_SAP_Pub_CreateGBO.Main">
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="389,208" dataSource="MBUD1" computeExpression="esql://routine/com.kingfisher.ukbq.TaxService#Tax_SAP_Pub_CreateGBO.Main" computeMode="all">
         <translation xmi:type="utility:ConstantString" string="CreateGBO"/>
         <shortDescription xmi:type="utility:ConstantString" string="Map to Canonical"/>
         <longDescription xmi:type="utility:ConstantString" string="Concate data received by RFC and map to Canonical."/>

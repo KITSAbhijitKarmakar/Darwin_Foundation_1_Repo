@@ -36,12 +36,27 @@ CREATE COMPUTE MODULE Tax_SAP_Pub_CreateGBO
 	BEGIN
 		CALL CopyMessageHeaders();
 		
-	--Set Command to Publish TAX Canonical message on Topic '/MASTERDATA/TAX/DETAILS'.
+		--Declare and SET IN and OUT params to call the common esql function 
+		--for database look up for retrieving the topic information from the table.
+		
+		 DECLARE tabName 	CHARACTER; 
+		 DECLARE input 		CHARACTER; 
+		 DECLARE outCol 	CHARACTER; 
+		 DECLARE outValue 	CHARACTER; 
+		 SET tabName		='MBTOPICS';
+		 SET outCol			='TOPICSTRING';
+		 SET input			='Tax Topic';
+		 SET outValue 		='';
+		 
+		 CALL com.kingfisher.ukbq.WMBFunctions.RetrieveValuesLookup(tabName,outCol,input,outValue);
+		 
+		
+	--Set Command to Publish TAX Canonical message on Topic retrieved from the table.
 		SET OutputRoot.Properties=InputRoot.Properties;
 		SET OutputRoot.MQMD=InputRoot.MQMD;
 		SET OutputRoot.MQRFH2=InputRoot.MQRFH2;
 		SET OutputRoot.XMLNSC = InputRoot.XMLNSC;
-		SET OutputRoot.MQRFH2.psc.Topic = '/MASTERDATA/TAX/DETAILS';
+		SET OutputRoot.MQRFH2.psc.Topic = outValue;
 		SET OutputRoot.MQRFH2.psc.Command='Publish';
 		
 	--Declare CounterVariables and Namespaces.

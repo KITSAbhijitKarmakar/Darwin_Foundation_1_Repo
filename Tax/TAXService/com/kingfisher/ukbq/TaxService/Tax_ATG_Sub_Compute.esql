@@ -1,11 +1,11 @@
 BROKER SCHEMA com.kingfisher.ukbq.TaxService
 
-
 CREATE COMPUTE MODULE Tax_ATG_Sub_PassThrough
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN
 		 CALL CopyMessageHeaders();
-		 CALL CopyEntireMessage();
+		CALL CopyEntireMessage();
+			
 		RETURN TRUE;
 	END;
 
