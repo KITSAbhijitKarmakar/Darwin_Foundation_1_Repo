@@ -1,0 +1,130 @@
+BROKER SCHEMA com.kingfisher.ukbq.CustomerService
+DECLARE xsi namespace 'http://www.w3.org/2001/XMLSchema-instance';
+DECLARE oa namespace 'http://www.openapplications.org/oagis/9';
+--DECLARE "SOAP-ENV" namespace 'http://schemas.xmlsoap.org/soap/envelope/';
+DECLARE defNS namespace 'http://www.kingfisher.com/oagis/9';
+--
+CREATE COMPUTE MODULE Customer_RETAILJ_Sub_Compute 
+--	/************************************************************************************
+--	* Function Name:	      Main                              						*
+--	* Input Parameters:	      None                             							*
+--	* Output Parameters:      Boolean Return                    						*
+--	* Description:            The Main entrypoint to the module 						*  
+-- 
+--	* Version      Date	   		   Author				Description                     *
+--	* ======= 	=========== 	=========== 	================================		*
+--	*  1.00  	09-April-2012   Mukund Killa	    The initial version.         		*
+--	************************************************************************************/
+	
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+	
+		--Declare IN and OUT reference
+		DECLARE inCustRef 	REFERENCE TO InputRoot.XMLNSC.defNS:SynchroniseCustomer.defNS:DataArea.defNS:Customer;
+		DECLARE inCustAddRef 	REFERENCE To InputRoot.XMLNSC.defNS:SynchroniseCustomer.defNS:DataArea.defNS:Customer.defNS:Location.oa:Address;
+		DECLARE inCustCardRef 	REFERENCE To  InputRoot.XMLNSC.defNS:SynchroniseCustomer.defNS:DataArea.defNS:Customer.defNS:MembershipCard;
+		CREATE FIELD OutputRoot.XMLNSC[1].Customer;
+		DECLARE outCustRef 	REFERENCE To OutputRoot.XMLNSC[1].Customer;
+		CREATE FIELD OutputRoot.XMLNSC[2];
+		DECLARE outCustCardRef 	REFERENCE To OutputRoot.XMLNSC[2];
+		DECLARE cardCount INT;
+	   
+	   --Declare and set IN and OUT params for Database lookup.
+		 DECLARE tabName 	CHARACTER; 
+		 DECLARE input 		CHARACTER; 
+		 DECLARE outCol 	CHARACTER; 
+		 DECLARE outValue 	CHARACTER; 
+		 SET tabName		='CUSTOMERSEGMENT';
+		 SET outCol			='RETAILJCUSTOMERSEGMENT';
+		 SET input			='1';
+		 SET outValue 		='';
+		 
+		 -- Declare params to implement PostCode logic.
+		 DECLARE  str CHAR;
+		 DECLARE del INT;
+		 DECLARE strLen INT;
+		
+		--Set First 20 character for Given name and Family name.
+		SET outCustRef.Forename = SUBSTRING(inCustRef.oa:GivenName FROM 1 FOR 20) ;
+		SET outCustRef.Surname = SUBSTRING(inCustRef.oa:FamilyName FROM 1 FOR 20) ;
+
+		--Set Value of CustomerNumber based on Customer SchemaID.
+			IF inCustRef.oa:ID.(XMLNSC.Attribute)schemeID = 1 OR inCustRef.oa:ID.(XMLNSC.Attribute)schemeID = 2 THEN
+				SET outCustRef.CustomerNumber VALUE = inCustRef.oa:ID ;
+			END IF;
+
+		--Set CustomerAddress	
+		SET outCustRef.Address.OrganisationName 	= inCustRef.defNS:Organisation.oa:Name ;
+		SET outCustRef.Address.Street1 				= inCustAddRef.oa:BuildingNumber || ' ' || inCustAddRef.oa:StreetName ;
+		SET outCustRef.Address.Town 				= inCustAddRef.oa:CityName ;
+		SET outCustRef.Address.Street2 				= inCustAddRef.oa:BuildingName ;
+		SET outCustRef.Address.County 				= inCustAddRef.oa:CountrySubDivisionCode ;
+	
+		-- Remove space from PostCode and insert one space before last  3 character.	
+		SET str = inCustAddRef.oa:PostalCode;
+		SET strLen = LENGTH(str);
+		WHILE strLen > 1   DO
+			SET del = POSITION( ' ' IN str);
+		 		IF del <> 0 THEN
+				 	SET str = SUBSTRING(str FROM 1 FOR del -1) || SUBSTRING(str FROM del +1);
+		 			SET strLen = strLen - del;
+				ELSE 
+					SET strLen = 0;
+				END IF;
+		END WHILE;
+		SET strLen = LENGTH(str);
+		SET outCustRef.Address.PostCode = SUBSTRING(str FROM 1 FOR strLen -3) || ' ' || SUBSTRING(str FROM strLen -2);
+		
+	
+	/*Set value for Customer Classification by calling common RetrieveValuesLoopup function to 
+	lookup CustomerSegmentRelationship to retrive RetalJ Customer Segment.*/
+		 IF inCustRef.defNS:PriceSegmentGroup IS NOT NULL  OR FIELDVALUE(inCustRef.defNS:PriceSegmentGroup) IS NOT NULL THEN 
+		 	 CALL com.kingfisher.ukbq.WMBFunctions.RetrieveValuesLookup(tabName,outCol,input,outValue);
+		 	 SET outCustRef.Classification =outValue;
+				
+		 ELSEIF inCustRef.oa:GroupType IS NOT NULL OR FIELDVALUE(inCustRef.oa:GroupType)IS NOT NULL THEN
+			SET outCustRef.Classification = 'TradePoint';
+		 END IF;
+	
+		--Set value for each occurance of Customer Membership Card(n)based on the Customer Card Type.
+		SET cardCount = 1;
+		WHILE LASTMOVE(inCustCardRef)DO
+			IF inCustCardRef.oa:Type = 1 THEN
+				 SET outCustCardRef.CustomerCard[cardCount].PAN = inCustCardRef.oa:ID[cardCount];
+					IF inCustRef.oa:ID.(XMLNSC.Attribute)schemeID = 1 OR inCustRef.oa:ID.(XMLNSC.Attribute)schemeID = 2 THEN
+				 		SET outCustCardRef.CustomerCard[cardCount].CustomerNumber VALUE = inCustRef.oa:ID;
+					END IF; 
+				  SET outCustCardRef.CustomerCard[cardCount].CardType = 15;
+				  SET outCustCardRef.CustomerCard[cardCount].ExpiryDate = SUBSTRING(inCustCardRef.defNS:ExpiredDateTime[cardCount] AFTER '-' FOR 2)||SUBSTRING(inCustCardRef.defNS:ExpiredDateTime[cardCount] FROM 3 FOR 2);
+					IF inCustCardRef.oa:Status.oa:Code <> 1 OR inCustCardRef.oa:Status.oa:Code <> 2 THEN
+				 	SET outCustCardRef.CustomerCard[cardCount].Active = 1;
+					ELSE
+					SET outCustCardRef.CustomerCard[cardCount].Active = 0;
+					END IF; 
+				 SET cardCount = cardCount + 1;
+			 END IF;
+		MOVE inCustCardRef NEXTSIBLING REPEAT TYPE NAME;
+		END WHILE; 
+
+	
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+end module;
+
+
+
+

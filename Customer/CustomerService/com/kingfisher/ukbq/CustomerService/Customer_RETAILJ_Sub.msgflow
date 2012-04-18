@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ComIbmCompute.msgnode="ComIbmCompute.msgnode" xmlns:ComIbmMQInput.msgnode="ComIbmMQInput.msgnode" xmlns:ComIbmMQOutput.msgnode="ComIbmMQOutput.msgnode" xmlns:ComIbmSOAPExtract.msgnode="ComIbmSOAPExtract.msgnode" xmlns:com_kingfisher_ukbq_errorhandlers_ErrorHandler.msgflow="com/kingfisher/ukbq/errorhandlers/ErrorHandler.msgflow" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:eflow="http://www.ibm.com/wbi/2005/eflow" xmlns:utility="http://www.ibm.com/wbi/2005/eflow_utility" nsURI="com/kingfisher/ukbq/CustomerService/Customer_RETAILJ_Sub.msgflow"
+    nsPrefix="com_kingfisher_ukbq_CustomerService_Customer_RETAILJ_Sub.msgflow">
+  <eClassifiers xmi:type="eflow:FCMComposite" name="FCMComposite_1">
+    <eSuperTypes href="http://www.ibm.com/wbi/2005/eflow#//FCMBlock"/>
+    <translation xmi:type="utility:TranslatableString" key="Customer_RETAILJ_Sub" bundleName="com/kingfisher/ukbq/CustomerService/Customer_RETAILJ_Sub" pluginId="Customer_Service"/>
+    <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/Customer_Service/icons/full/obj16/Customer_RETAILJ_Sub.gif"/>
+    <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/Customer_Service/icons/full/obj30/Customer_RETAILJ_Sub.gif"/>
+    <composition>
+      <nodes xmi:type="ComIbmMQInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1" location="26,84" queueName="CUSTOMER.RETAILJ.INBOUND.WMB" messageDomainProperty="XMLNSC">
+        <translation xmi:type="utility:ConstantString" string="WMB_MQInput_RetalJ"/>
+        <shortDescription xmi:type="utility:ConstantString" string="Receive WMB canonical"/>
+        <longDescription xmi:type="utility:ConstantString" string="MQInput node to receive canonical message with SOAP Header. "/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_3" location="298,88" dataSource="MBREPOS" computeExpression="esql://routine/com.kingfisher.ukbq.CustomerService#Customer_RETAILJ_Sub_Compute.Main">
+        <translation xmi:type="utility:ConstantString" string="TransformToXML"/>
+        <shortDescription xmi:type="utility:ConstantString" string="CanonicalToXMLTransformation"/>
+        <longDescription xmi:type="utility:ConstantString" string="Canonical message is transformed into XML as per the requirement of RetailJ"/>
+      </nodes>
+      <nodes xmi:type="ComIbmSOAPExtract.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_5" location="159,84">
+        <translation xmi:type="utility:ConstantString" string=" ExtractSOAPHeader"/>
+        <shortDescription xmi:type="utility:ConstantString" string="SOAP Extract node"/>
+        <longDescription xmi:type="utility:ConstantString" string="To extract SOAP Header from the Canonical"/>
+      </nodes>
+      <nodes xmi:type="ComIbmMQOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_6" location="409,89" queueName="CUSTOMER.RETAILJ.OUTBOUND.WMB">
+        <translation xmi:type="utility:ConstantString" string="WMB_MQOutput_RetailJ"/>
+        <shortDescription xmi:type="utility:ConstantString" string="Put the message onto a MQ"/>
+        <longDescription xmi:type="utility:ConstantString" string="Put the transformed xml messages onto the target queue of retailJ.RetailJ will consume via JMS at their end"/>
+      </nodes>
+      <nodes xmi:type="com_kingfisher_ukbq_errorhandlers_ErrorHandler.msgflow:FCMComposite_1" xmi:id="FCMComposite_1_7" location="193,188">
+        <translation xmi:type="utility:ConstantString" string="ErrorHandler"/>
+      </nodes>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_1" targetNode="FCMComposite_1_5" sourceNode="FCMComposite_1_1" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_4" targetNode="FCMComposite_1_3" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_5" targetNode="FCMComposite_1_6" sourceNode="FCMComposite_1_3" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_6" targetNode="FCMComposite_1_7" sourceNode="FCMComposite_1_1" sourceTerminalName="OutTerminal.catch" targetTerminalName="InTerminal.Input"/>
+    </composition>
+    <propertyOrganizer/>
+    <stickyBoard/>
+  </eClassifiers>
+</ecore:EPackage>
