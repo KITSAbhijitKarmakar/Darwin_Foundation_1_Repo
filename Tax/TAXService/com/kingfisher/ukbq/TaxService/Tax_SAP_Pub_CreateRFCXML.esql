@@ -1,36 +1,42 @@
 BROKER SCHEMA com.kingfisher.ukbq.TaxService
-/****************************************************************************************
-* COPYRIGHT. <TATA CONSULTANCY SERVICES 2012> ALL RIGHTS RESERVED. NO PART OF THIS   	*
-* SOURCE CODE MAY BE REPRODUCED, STORED IN A RETRIEVAL SYSTEM, OR TRANSMITTED,IN ANY	*
-* FORM BY ANY MEANS, ELECTRONIC, MECHANICAL, PHOTOCOPYING, RECORDING OR OTHERWISE,		*
-* WITHOUT THE PRIOR WRITTEN PERMISSION OF <TATA CONSULTANCY SERVICES>.                  *                           		*
-****************************************************************************************/
+/****************************************************************************************************
+* COPYRIGHT. <TATA CONSULTANCY SERVICES 2012> ALL RIGHTS RESERVED. NO PART OF THIS   				*
+* SOURCE CODE MAY BE REPRODUCED, STORED IN A RETRIEVAL SYSTEM, OR TRANSMITTED,IN ANY				*
+* FORM BY ANY MEANS, ELECTRONIC, MECHANICAL, PHOTOCOPYING, RECORDING OR OTHERWISE,					*
+* WITHOUT THE PRIOR WRITTEN PERMISSION OF <TATA CONSULTANCY SERVICES>.                  			*                           	
+****************************************************************************************************/
 
-/****************************************************************************************	
-* Node Name:		CreateRFCXML		     		 									*
-* Module Name:		com.kingfisher.ukbq.TaxService.Tax_SAP_Pub_CreateRFCXML            		 						*
-* Description:		This module create XML message along with the required namespace
-					to perform RFC in SAP.   											*                                         
-																						
-* Version      Date	   		   Author				Description                     	*
-* ======= 	=========== 	=========== 	========================================	*
-*  1.00  	26-Mar-2012   	Prabha Shaw	    The initial version.                		*
-****************************************************************************************/
+/****************************************************************************************************	
+* Node Name      			:	CreateRFCXML														*	
+* Interface Id 	 			:	10.1																*
+* Interface Name 			:	TaxService															*
+* Message Flow 				: 	Tax_SAP_Pub															*
+* Message Flow Description 	: 	The primary function of this message flow  is to take VAT data from *
+								SAP (two SAP RFC calls) and map to the Tax canonical format and	    *
+ 								publish on MQ.						     		 					*
+* Module Name  				:	com.kingfisher.ukbq.TaxService.Tax_SAP_Pub_CreateRFCXML            	*
+* Description  				:	This module create XML message along with the required namespace    *
+								to perform RFC in SAP.   											*                                         
+																									*
+* Version      Date	   		   Author				Description                     				*
+* ======= 	=========== 	=========== 	========================================				*
+*  1.00  	26-Mar-2012   	Prabha Shaw	    The initial version.                					*
+****************************************************************************************************/
 
 
 DECLARE ns NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget';
 
 CREATE COMPUTE MODULE Tax_SAP_Pub_CreateRFCXML
-	/************************************************************************************
-	* Function Name:	      Main                              						*
-	* Input Parameters:	      None                             							*
-	* Output Parameters:      Boolean Return                    						*
-	* Description:            The Main entrypoint to the module 						*  
- 
-	* Version      Date	   		   Author				Description                     *
-	* ======= 	=========== 	=========== 	================================		*
-	*  1.00  	26-Mar-2012   	Prabha Shaw	    The initial version.         		*
-	************************************************************************************/
+	/************************************************************************************************
+	* Function Name:	      Main                              									*
+	* Input Parameters:	      None                             										*
+	* Output Parameters:      Boolean Return                    									*	
+	* Description:            The Main entrypoint to the module 									*  
+ 																									*
+	* Version      Date	   		   Author				Description                     			*
+	* ======= 	=========== 	=========== 	================================					*
+	*  1.00  	26-Mar-2012   	Prabha Shaw	    The initial version.         						*
+	************************************************************************************************/
 	
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN
@@ -76,5 +82,7 @@ CREATE COMPUTE MODULE Tax_SAP_Pub_CreateRFCXML
 		SET OutputRoot = InputRoot;
 	END;
 END MODULE;
+
+
 
 

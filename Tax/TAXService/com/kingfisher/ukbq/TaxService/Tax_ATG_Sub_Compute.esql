@@ -1,5 +1,28 @@
 BROKER SCHEMA com.kingfisher.ukbq.TaxService
 
+/****************************************************************************************************
+* COPYRIGHT. <TATA CONSULTANCY SERVICES 2012> ALL RIGHTS RESERVED. NO PART OF THIS   				*
+* SOURCE CODE MAY BE REPRODUCED, STORED IN A RETRIEVAL SYSTEM, OR TRANSMITTED,IN ANY				*
+* FORM BY ANY MEANS, ELECTRONIC, MECHANICAL, PHOTOCOPYING, RECORDING OR OTHERWISE,					*
+* WITHOUT THE PRIOR WRITTEN PERMISSION OF <TATA CONSULTANCY SERVICES>.                  			*                           	
+****************************************************************************************************/
+
+/****************************************************************************************************	
+* Node Name      			:	PassThrough															*	
+* Interface Id 	 			:	10.2																*
+* Interface Name 			:	TaxService															*
+* Message Flow 				: 	Tax_ATG_Sub															*
+* Message Flow Description 	: 	The primary function of this message flow / service is to take VAT  *
+								data from WMB and deliver it to MQ						     		*
+* Module Name  				:	com.kingfisher.ukbq.TaxService.Tax_SAP_Pub_CreateRFCXML            	*
+* Description  				:	This is just a pass-through module which will not be performing		*
+								any transformation.   												*                                         
+																									*
+* Version      Date	   		   Author				Description                     				*
+* ======= 	=========== 	=========== 	========================================				*
+*  1.00  	26-Mar-2012   	Prabha Shaw	    The initial version.                					*
+****************************************************************************************************/
+
 CREATE COMPUTE MODULE Tax_ATG_Sub_PassThrough
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN

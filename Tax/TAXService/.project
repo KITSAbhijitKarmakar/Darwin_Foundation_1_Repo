@@ -3,9 +3,10 @@
 	<name>TAXService</name>
 	<comment></comment>
 	<projects>
-		<project>CWYAP_SAPAdapter_Tx2</project>
 		<project>ErrorHandlers</project>
+		<project>TAXServiceMessageSet</project>
 		<project>WMBFunctions</project>
+		<project>CWYAP_SAPAdapter_Tx9</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

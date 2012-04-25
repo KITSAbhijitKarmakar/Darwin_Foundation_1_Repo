@@ -1,0 +1,37 @@
+
+
+BROKER SCHEMA com.kingfisher.ukbq.TaxService
+
+
+CREATE COMPUTE MODULE Tax_SAP_Pub_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+
+		DECLARE sapzretrfcvattabget NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget';
+		DECLARE sapasi NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata';
+		DECLARE sapreturn619647890 NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapreturn619647890';
+		DECLARE sapttaxtab994896004 NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapttaxtab994896004';
+		DECLARE xsi NAMESPACE 'http://www.w3.org/2001/XMLSchema-instance';
+		DECLARE schemaLocation NAMESPACE 'http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvattabget C:\Darwin\com\ibm\www\xmlns\prod\websphere\j2ca\sap\sapzretrfcvattabget\SapZRetRfcVattabget.xsd';
+		
+		SET OutputRoot.XMLNSC.sapzretrfcvatsitetabget:SapZRetRfcVatsitetabget.IDateValid='2012-04-19';           
+		SET OutputRoot.XMLNSC.sapzretrfcvatsitetabget:SapZRetRfcVatsitetabget.IValidOnly='X';
+		-- CALL CopyEntireMessage();
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
