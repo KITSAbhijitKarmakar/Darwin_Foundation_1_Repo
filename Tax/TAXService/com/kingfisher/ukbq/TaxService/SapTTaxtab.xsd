@@ -20,7 +20,7 @@
 </xsd:appinfo>
 </xsd:annotation>
 <xsd:sequence maxOccurs="1" minOccurs="1">
-<xsd:element maxOccurs="1" minOccurs="0" name="Country" nillable="true">
+<xsd:element maxOccurs="1" minOccurs="0" name="COUNTRY" nillable="true">
 <xsd:annotation xml:space="preserve">
 <xsd:appinfo source="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata">
 <sapasi:sapBAPIPropertyTypeMetadata>
@@ -40,7 +40,7 @@
 </xsd:restriction>
 </xsd:simpleType>
 </xsd:element>
-<xsd:element maxOccurs="1" minOccurs="0" name="Site" nillable="true">
+<xsd:element maxOccurs="1" minOccurs="0" name="SITE" nillable="true">
 <xsd:annotation xml:space="preserve">
 <xsd:appinfo source="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata">
 <sapasi:sapBAPIPropertyTypeMetadata>
@@ -60,7 +60,7 @@
 </xsd:restriction>
 </xsd:simpleType>
 </xsd:element>
-<xsd:element maxOccurs="1" minOccurs="0" name="Code" nillable="true">
+<xsd:element maxOccurs="1" minOccurs="0" name="CODE" nillable="true">
 <xsd:annotation xml:space="preserve">
 <xsd:appinfo source="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata">
 <sapasi:sapBAPIPropertyTypeMetadata>
@@ -80,7 +80,7 @@
 </xsd:restriction>
 </xsd:simpleType>
 </xsd:element>
-<xsd:element maxOccurs="1" minOccurs="0" name="DateFrom" nillable="true" type="xsd:date">
+<xsd:element maxOccurs="1" minOccurs="0" name="DATE_FROM" nillable="true" type="xsd:date">
 <xsd:annotation xml:space="preserve">
 <xsd:appinfo source="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata">
 <sapasi:sapBAPIPropertyTypeMetadata>
@@ -94,7 +94,7 @@
 </xsd:appinfo>
 </xsd:annotation>
 </xsd:element>
-<xsd:element maxOccurs="1" minOccurs="0" name="DateTo" nillable="true" type="xsd:date">
+<xsd:element maxOccurs="1" minOccurs="0" name="DATE_TO" nillable="true" type="xsd:date">
 <xsd:annotation xml:space="preserve">
 <xsd:appinfo source="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata">
 <sapasi:sapBAPIPropertyTypeMetadata>
@@ -108,7 +108,7 @@
 </xsd:appinfo>
 </xsd:annotation>
 </xsd:element>
-<xsd:element maxOccurs="1" minOccurs="0" name="Rate" nillable="true">
+<xsd:element maxOccurs="1" minOccurs="0" name="RATE" nillable="true">
 <xsd:annotation xml:space="preserve">
 <xsd:appinfo source="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/metadata">
 <sapasi:sapBAPIPropertyTypeMetadata>

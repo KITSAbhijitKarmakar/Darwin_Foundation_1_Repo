@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ComIbmCompute.msgnode="ComIbmCompute.msgnode" xmlns:ComIbmMQInput.msgnode="ComIbmMQInput.msgnode" xmlns:ComIbmPublication.msgnode="ComIbmPublication.msgnode" xmlns:ComIbmSAPRequest.msgnode="ComIbmSAPRequest.msgnode" xmlns:com_kingfisher_ukbq_errorhandlers_ErrorHandler.msgflow="com/kingfisher/ukbq/errorhandlers/ErrorHandler.msgflow" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:eflow="http://www.ibm.com/wbi/2005/eflow" xmlns:mbmonitor="http://www.ibm.com/wbi/2008/eflow_mbmonitor"
+    xmlns:utility="http://www.ibm.com/wbi/2005/eflow_utility" nsURI="com/kingfisher/ukbq/TaxService/Tax_SAP_Pub.msgflow"
+    nsPrefix="com_kingfisher_ukbq_TaxService_Tax_SAP_Pub.msgflow">
+  <eClassifiers xmi:type="eflow:FCMComposite" name="FCMComposite_1">
+    <eSuperTypes href="http://www.ibm.com/wbi/2005/eflow#//FCMBlock"/>
+    <translation xmi:type="utility:TranslatableString" key="Tax_SAP_Pub" bundleName="com/kingfisher/ukbq/TaxService/Tax_SAP_Pub" pluginId="TAXService"/>
+    <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/TAXService/icons/full/obj16/Tax_SAP_Pub.gif"/>
+    <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/TAXService/icons/full/obj30/Tax_SAP_Pub.gif"/>
+    <composition>
+      <nodes xmi:type="ComIbmMQInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_5" location="-5,58" queueName="TAX.TIVOLI.INBOUND.LOCAL" messageDomainProperty="XMLNSC">
+        <translation xmi:type="utility:ConstantString" string="Tivoli_MQInput_Tax"/>
+        <shortDescription xmi:type="utility:ConstantString" string="MQ input"/>
+        <longDescription xmi:type="utility:ConstantString" string="MQ input node triggered by Tivoli message on an MQ queue."/>
+        <monitorEvents eventSourceDescription="Transaction start" eventSourceName="Tivoli_MQInput_Tax.transaction.Start" eventIdentity="Tivoli_MQInput_Tax.TransactionStart">
+          <eventXMLDoc xmi:type="mbmonitor:MonitorEvent">
+            <applicationData dataLocation="$Properties/CreationTime" isXPath="true" complexData="true"/>
+            <globalTransactionCorrelator/>
+            <parentTransactionCorrelator/>
+            <localTransactionCorrelator/>
+            <bitStreamData encoding="none" bitstreamContent="none"/>
+            <eventName literal="Tivoli_MQInput_Tax.TransactionStart"/>
+            <eventFilter dataLocation="true()" isXPath="true"/>
+          </eventXMLDoc>
+        </monitorEvents>
+        <monitorEvents eventSourceDescription="Transaction rollback" eventSourceName="Tivoli_MQInput_Tax.transaction.Rollback" eventIdentity="Tivoli_MQInput_Tax.TransactionRollback">
+          <eventXMLDoc xmi:type="mbmonitor:MonitorEvent" eventUOW="independent">
+            <applicationData dataLocation="$Properties/CreationTime" isXPath="true" complexData="true"/>
+            <applicationData dataLocation="$ExceptionList" isXPath="true" complexData="true"/>
+            <globalTransactionCorrelator/>
+            <parentTransactionCorrelator/>
+            <localTransactionCorrelator/>
+            <bitStreamData encoding="base64Binary"/>
+            <eventName literal="Tivoli_MQInput_Tax.TransactionRollback"/>
+            <eventFilter dataLocation="true()" isXPath="true"/>
+          </eventXMLDoc>
+        </monitorEvents>
+        <monitorEvents eventSourceDescription="Out terminal" eventSourceName="Tivoli_MQInput_Tax.terminal.out" eventIdentity="Tivoli_MQInput_Tax.OutTerminal">
+          <eventXMLDoc xmi:type="mbmonitor:MonitorEvent">
+            <applicationData dataLocation="$Properties/CreationTime" isXPath="true" complexData="true"/>
+            <globalTransactionCorrelator/>
+            <parentTransactionCorrelator/>
+            <localTransactionCorrelator/>
+            <bitStreamData encoding="none" bitstreamContent="none"/>
+            <eventName literal="Tivoli_MQInput_Tax.OutTerminal"/>
+            <eventFilter dataLocation="true()" isXPath="true"/>
+          </eventXMLDoc>
+        </monitorEvents>
+        <monitorEvents eventSourceDescription="Failure terminal" eventSourceName="Tivoli_MQInput_Tax.terminal.failure" eventIdentity="Tivoli_MQInput_Tax.FailureTerminal">
+          <eventXMLDoc xmi:type="mbmonitor:MonitorEvent">
+            <applicationData dataLocation="$Properties/CreationTime" isXPath="true" complexData="true"/>
+            <applicationData dataLocation="$ExceptionList" isXPath="true" complexData="true"/>
+            <globalTransactionCorrelator/>
+            <parentTransactionCorrelator/>
+            <localTransactionCorrelator/>
+            <bitStreamData encoding="base64Binary"/>
+            <eventName literal="Tivoli_MQInput_Tax.FailureTerminal"/>
+            <eventFilter dataLocation="true()" isXPath="true"/>
+          </eventXMLDoc>
+        </monitorEvents>
+        <monitorEvents eventSourceDescription="Catch terminal" eventSourceName="Tivoli_MQInput_Tax.terminal.catch" eventIdentity="Tivoli_MQInput_Tax.CatchTerminal">
+          <eventXMLDoc xmi:type="mbmonitor:MonitorEvent">
+            <applicationData dataLocation="$Properties/CreationTime" isXPath="true" complexData="true"/>
+            <applicationData dataLocation="$ExceptionList" isXPath="true" complexData="true"/>
+            <globalTransactionCorrelator/>
+            <parentTransactionCorrelator/>
+            <localTransactionCorrelator/>
+            <bitStreamData encoding="base64Binary"/>
+            <eventName literal="Tivoli_MQInput_Tax.CatchTerminal"/>
+            <eventFilter dataLocation="true()" isXPath="true"/>
+          </eventXMLDoc>
+        </monitorEvents>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_6" location="341,62" computeExpression="esql://routine/com.kingfisher.ukbq.TaxService#Tax_SAP_Pub_CreateRFCXML.Main">
+        <translation xmi:type="utility:ConstantString" string="CreateRFCXML"/>
+        <shortDescription xmi:type="utility:ConstantString" string="RFC XML Creation"/>
+        <longDescription xmi:type="utility:ConstantString" string="Creates XML reqired  to invoke the other RFC."/>
+      </nodes>
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="389,208" dataSource="MBREPOS" computeExpression="esql://routine/com.kingfisher.ukbq.TaxService#Tax_SAP_Pub_CreateGBO.Main" computeMode="all">
+        <translation xmi:type="utility:ConstantString" string="CreateGBO"/>
+        <shortDescription xmi:type="utility:ConstantString" string="Map to Canonical"/>
+        <longDescription xmi:type="utility:ConstantString" string="Concate data received by RFC and map to Canonical."/>
+      </nodes>
+      <nodes xmi:type="ComIbmSAPRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_14" location="431,127" adapterComponent="Adapters/SAP/SAPBIRFCOUTBOUND.outadapter" defaultMethod="executeSapZRetRfcVattabget">
+        <translation xmi:type="utility:ConstantString" string="SAP_Z_RET_RFC_VATTABGET_TAX"/>
+        <shortDescription xmi:type="utility:ConstantString" string="SAPRequest node to make RFC in SAP"/>
+        <longDescription xmi:type="utility:ConstantString" string="Call Z_RET_RFC_VATTABGET_TAX to get TAX data."/>
+      </nodes>
+      <nodes xmi:type="ComIbmSAPRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_16" location="118,58" adapterComponent="Adapters/SAP/SAPBIRFCOUTBOUND.outadapter" defaultMethod="executeSapZRetRfcVatsitetabget" outputDataLocation="$Environment/sap:SapZRetRfcVatsitetabget">
+        <translation xmi:type="utility:ConstantString" string="SAP_Z_RET_RFC_VATSITETABGET_TAX"/>
+        <shortDescription xmi:type="utility:ConstantString" string="SAPRequest node to make RFC in SAP"/>
+        <longDescription xmi:type="utility:ConstantString" string="Call Z_RET_RFC_VATSITETABGET_TAX to get TAX data."/>
+        <nsMappingTable nsPrefix="sap" namespace="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvatsitetabget"/>
+        <monitorEvents eventSourceDescription="Out terminal" eventSourceName="SAP_Z_RET_RFC_VATSITETABGET_TAX.terminal.out" eventIdentity="SAP_Z_RET_RFC_VATSITETABGET_TAX.OutTerminal">
+          <eventXMLDoc xmi:type="mbmonitor:MonitorEvent">
+            <applicationData dataLocation="$Environment/sapzretrfcvatsitetabget:SapZRetRfcVatsitetabget" isXPath="true" complexData="true">
+              <nsPrefixMap prefix="sap" nsURI="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvatsitetabget"/>
+            </applicationData>
+            <globalTransactionCorrelator/>
+            <parentTransactionCorrelator/>
+            <localTransactionCorrelator/>
+            <bitStreamData encoding="none" bitstreamContent="none"/>
+            <eventName literal="SAP_Z_RET_RFC_VATSITETABGET_TAX.OutTerminal"/>
+            <eventFilter dataLocation="true()" isXPath="true">
+              <nsPrefixMap prefix="sap" nsURI="http://www.ibm.com/xmlns/prod/websphere/j2ca/sap/sapzretrfcvatsitetabget"/>
+            </eventFilter>
+          </eventXMLDoc>
+        </monitorEvents>
+      </nodes>
+      <nodes xmi:type="ComIbmPublication.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1" location="536,209">
+        <translation xmi:type="utility:ConstantString" string="SAP_Publication_Tax"/>
+        <shortDescription xmi:type="utility:ConstantString" string="PublishTaxCanonical"/>
+        <longDescription xmi:type="utility:ConstantString" string=" "/>
+      </nodes>
+      <nodes xmi:type="com_kingfisher_ukbq_errorhandlers_ErrorHandler.msgflow:FCMComposite_1" xmi:id="FCMComposite_1_2" location="172,178">
+        <translation xmi:type="utility:ConstantString" string="ErrorHandler"/>
+      </nodes>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_19" targetNode="FCMComposite_1_14" sourceNode="FCMComposite_1_6" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_24" targetNode="FCMComposite_1_6" sourceNode="FCMComposite_1_16" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_26" targetNode="FCMComposite_1_7" sourceNode="FCMComposite_1_14" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_2" targetNode="FCMComposite_1_2" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.catch" targetTerminalName="InTerminal.Input"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_5" targetNode="FCMComposite_1_16" sourceNode="FCMComposite_1_5" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_3" targetNode="FCMComposite_1_1" sourceNode="FCMComposite_1_7" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+    </composition>
+    <propertyOrganizer/>
+    <stickyBoard/>
+  </eClassifiers>
+</ecore:EPackage>

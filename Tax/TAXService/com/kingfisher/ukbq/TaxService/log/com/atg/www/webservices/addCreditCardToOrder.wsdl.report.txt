@@ -1,0 +1,41 @@
+
+
+Importing file: C:\Users\346850\Documents\workspace\TAXService\addCreditCardToOrder.wsdl
+
+Copying source WSDL addCreditCardToOrder.wsdl to addCreditCardToOrder.wsdl.
+
+The following is a list of WS-I warning messages found when importing:
+WSDL: The 'atg.payment.creditcard.wsdl' document could not be imported. Check that the document exists and that the location is correct., Line: 6, Column: 1
+WS-I BP 1.1: (BP2101) An import may only reference a WSDL document., Line: 6, Column: 1
+WS-I BP 1.1: (BP2105) A wsdl:import element in the WSDL namespace under the wsdl:definitions element, is preceded by child elements other than wsdl:documentation elements., Line: 6, Column: 1
+WSDL: The 'atg.security.wsdl' document could not be imported. Check that the document exists and that the location is correct., Line: 7, Column: 1
+WS-I BP 1.1: (BP2101) An import may only reference a WSDL document., Line: 7, Column: 1
+WS-I BP 1.1: (BP2105) A wsdl:import element in the WSDL namespace under the wsdl:definitions element, is preceded by child elements other than wsdl:documentation elements., Line: 7, Column: 1
+WSDL: The 'atg.commerce.wsdl' document could not be imported. Check that the document exists and that the location is correct., Line: 8, Column: 1
+WS-I BP 1.1: (BP2101) An import may only reference a WSDL document., Line: 8, Column: 1
+WS-I BP 1.1: (BP2105) A wsdl:import element in the WSDL namespace under the wsdl:definitions element, is preceded by child elements other than wsdl:documentation elements., Line: 8, Column: 1
+WSDL: The 'BasicCreditCardInfoImpl' type that is referenced by the creditCardInfo part cannot be resolved. , Line: 11, Column: 1
+WSDL: The 'SecurityException' type that is referenced by the SecurityException part cannot be resolved. , Line: 17, Column: 1
+WSDL: The 'CommerceException' type that is referenced by the CommerceException part cannot be resolved. , Line: 20, Column: 1
+WSDL: The element 'http://schemas.xmlsoap.org/wsdl/soap/#binding' is not permitted as constrained by 'http://schemas.xmlsoap.org/wsdl/#tBinding'; expecting operation | nothing, Line: 46, Column: 1
+
+
+The WSDL import will proceed with bindings AddCreditCardToOrderSEIBinding.
+Creating wsdl schema document for file:///C:/Users/346850/Documents/workspace/TAXService/addCreditCardToOrder.wsdl.
+Parsing wsdl binding {http://www.atg.com/webservices}AddCreditCardToOrderSEIBinding.
+Parsing wsdl binding input addCreditCardToOrder.
+Parsing wsdl binding output addCreditCardToOrder.
+Parsing wsdl binding fault CommerceException.
+Parsing wsdl binding fault SecurityException.
+Processing rpc style for operation addCreditCardToOrder.
+Populating WSDL schema addCreditCardToOrder.xsd.
+Creating file addCreditCardToOrder.xsd in the workspace.
+Creating file addCreditCardToOrder_InlineSchema1.xsd in the workspace.
+
+Elapsed time processing this message definition file: 0.924 seconds
+Number of warnings for this message definition file: 0
+
+
+Number of files processed: 1
+
+
